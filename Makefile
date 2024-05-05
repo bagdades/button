@@ -122,7 +122,8 @@ C_INCLUDES =  \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \
 -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
--IDrivers/CMSIS/Include
+-IDrivers/CMSIS/Include \
+-IDrivers/generalIO
 
 
 # compile gcc flags
@@ -192,6 +193,12 @@ $(BUILD_DIR):
 #######################################
 clean:
 	-rm -fR $(BUILD_DIR)
+  
+#######################################
+# Flash
+#######################################
+flash:
+	openocd -f openocd_flash.cfg
   
 #######################################
 # dependencies

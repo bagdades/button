@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "key.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,7 +45,8 @@ RTC_HandleTypeDef hrtc;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
+BUT_Button_t butUp;
+BUT_Button_t butDown;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -54,7 +55,7 @@ static void MX_GPIO_Init(void);
 static void MX_RTC_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+static void BUT_Callback(BUT_Button_t* but, BUT_Presed_type_t type);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -94,7 +95,8 @@ int main(void)
   MX_RTC_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  BUT_Init(&butUp, BUT_UP_GPIO_Port, BUT_UP_Pin, false, BUT_Callback);
+  BUT_Init(&butDown, BUT_DOWN_GPIO_Port, BUT_DOWN_Pin, false, BUT_Callback);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -257,7 +259,26 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void ProgramHandler(void) {
+    BUT_Check(&butUp);
+    BUT_Check(&butDown);
+}
 
+void BUT_Callback(BUT_Button_t* but, BUT_Presed_type_t press) {
+    if (but == &butUp) {
+        if (press == PRESS_CLICK) {
+            HAL_UART_Transmit_IT(&huart2, (uint8_t*)"Up click\n", 9);
+        } else if (press == PRESS_LONG_CLICK) {
+            HAL_UART_Transmit_IT(&huart2, (uint8_t*)"Up long click\n", 14);
+        }
+    } else if (but == &butDown) {
+        if (press == PRESS_CLICK) {
+            HAL_UART_Transmit_IT(&huart2, (uint8_t*)"Down click\n", 11);
+        } else if (press == PRESS_LONG_CLICK) {
+            HAL_UART_Transmit_IT(&huart2, (uint8_t*)"Down long click\n", 16);
+        }
+    }
+}
 /* USER CODE END 4 */
 
 /**
