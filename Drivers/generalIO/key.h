@@ -11,6 +11,8 @@
 #define BUT_NORMAL_PRESS_TIME   50
 #define BUT_LONG_PRESS_TIME     500
 
+#define REPEAT
+
 typedef enum {
     CLICK_NOTHING,
     PRESS_CLICK,

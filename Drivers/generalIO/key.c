@@ -58,12 +58,23 @@ void BUT_Check(BUT_Button_t* but) {
     }
     if (but->state == BT_PRESSED) {
         if (state == but->GPIO_state) {
+
+#ifdef  REPEAT
+            if ((current_time - but->pressed_time) > BUT_LONG_PRESS_TIME) {
+                if (but->BUT_Handler) {
+                    but->BUT_Handler(but, PRESS_CLICK);
+                }
+                but->pressed_time += BUT_LONG_PRESS_TIME - 300;
+            } 
+            
+#else      /* -----  not REPEAT  ----- */
             if ((current_time - but->pressed_time) > BUT_LONG_PRESS_TIME) {
                 if (but->BUT_Handler) {
                     but->BUT_Handler(but, PRESS_LONG_CLICK);
                 }
                 but->state = BT_UNRELEASED;
             } 
+#endif     /* -----  not REPEAT  ----- */
         }else if (state != but->GPIO_state) {
             if ((current_time - but->pressed_time) > BUT_NORMAL_PRESS_TIME) {
                 if (but->BUT_Handler) {
